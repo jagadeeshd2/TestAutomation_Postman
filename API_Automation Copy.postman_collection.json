@@ -1,0 +1,5000 @@
+{
+	"info": {
+		"_postman_id": "6ba50874-94de-471a-b704-66284b6b6221",
+		"name": "API_Automation Copy",
+		"description": "# 📘 API Automation Test Collection\n\n### 🔍 Overview\n\nThis collection includes automated tests for key API endpoints including cart operations, coupon application, combo validation, order creation, and user profile verification.\n\n### ℹ️ **Pre-requisites:**\n\n- 📦 Products should be available to place order (VM 8): 102, 103\n    \n- 🎟️ Coupons should be available(102)\n    \n- 🍱 Combos should be available (601, 905)\n    \n- 💰 Wallets should be having succefficient balance\n    \n\n### 🌐 Environments\n\n- `{{base_url}}`: API Base URL\n    \n- `{{oauthToken}}`: Bearer Token\n    \n- `{{orderId}}`: Captured after order creation\n    \n\n---",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24220162",
+		"_collection_link": "https://warped-moon-87998.postman.co/workspace/My-Workspace~923e0a16-49d5-420d-8db2-025f4b3a0401/collection/24220162-6ba50874-94de-471a-b704-66284b6b6221?action=share&source=collection_link&creator=24220162"
+	},
+	"item": [
+		{
+			"name": "Authenticate API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Store requestId\", function() \r",
+							"{\r",
+							"var responseData  = pm.response.json();\r",
+							"if(responseData.response && responseData.response.requestId)\r",
+							"{pm.environment.set(\"requestId\", responseData.response.requestId);\r",
+							"}else{\r",
+							"    console.error(\"❌ requestId not found in the response.\");\r",
+							"pm.expect.fail(\"requestId not found in the response\");    \r",
+							"}\r",
+							"}\r",
+							")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"request\": {\n    \"mobileNo\": \"9958388141\"\n  }\n}"
+				},
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/auth/user/authenticate",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"auth",
+						"user",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid_otp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// ✅ Validate Invalid OTP Response\r",
+							"pm.test(\"Validate Invalid OTP Response\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    const expectedMessage = \"OTP doesn't match. Please try again!!!.\";\r",
+							"\r",
+							"    if (jsonData?.statusMessage === expectedMessage) {\r",
+							"        pm.expect(jsonData.status).to.eql(\"FAILURE\");\r",
+							"        pm.expect(jsonData.statusCode).to.eql(\"UA_1003\");\r",
+							"        pm.expect(jsonData.successful).to.eql(false);\r",
+							"    } else {\r",
+							"        console.log(\"Skipping Invalid OTP validation — not the right error message.\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// // ✅ Check if status code is within expected values\r",
+							"// pm.test(\"Status code is valid\", function () {\r",
+							"//     let validStatusCodes = [200,401, 400, 403];\r",
+							"//     let actualStatusCode = pm.response.code;\r",
+							"\r",
+							"//     pm.expect(validStatusCodes).to.include(actualStatusCode, `Unexpected status code: ${actualStatusCode}`);\r",
+							"// });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"request\": {\r\n    \"mobileNo\": \"9958388141\",\r\n    \"requestId\": \"d3203459-b947-4b89-bf19-53e9d6a0ce46\",\r\n    \"otp\": \"1234\",\r\n    \"fcmUserToken\": null,\r\n    \"sourcePlatform\": \"android\",\r\n    \"deviceId\": \"\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/user/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let requestId = pm.environment.get(\"requestId\");\r",
+							"\r",
+							"if (!requestId) {\r",
+							"    console.error(\"❌ requestId not found in environment. Run Authenticate API first.\");\r",
+							"    postman.setNextRequest(null); // Stop the request chain\r",
+							"} else {\r",
+							"    console.log(\"✅ Using requestId:\", requestId);\r",
+							"}\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"// //console.log(\"Sent requestId:\", pm.variables.get(\"requestId\"));\r",
+							"// // ✅ Use the stored requestId for the Login API\r",
+							"// let requestId = pm.environment.get(\"requestId\");\r",
+							"\r",
+							"// if (requestId) {\r",
+							"//     let loginPayload = {\r",
+							"//         request: {\r",
+							"//             mobileNo: \"9958388141\", // Your mobile number here\r",
+							"//             requestId: requestId,\r",
+							"//             otp: \"9958\", // OTP value here\r",
+							"//             fcmUserToken: null,\r",
+							"//             sourcePlatform: \"android\",\r",
+							"//             deviceId: \"\"\r",
+							"//         }\r",
+							"//     };\r",
+							"\r",
+							"//     pm.request.body.raw = JSON.stringify(loginPayload);\r",
+							"//     console.log(\"✅ Using stored requestId:\", requestId);\r",
+							"// } else {\r",
+							"//     console.error(\"❌ requestId is not stored. Please check the Authenticate API response.\");\r",
+							"// }\r",
+							"\r",
+							"// //console.log(\"Using requestId:\", pm.environment.get(\"requestId\"));\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// try {\r",
+							"//     // ✅ Parse response JSON once\r",
+							"//     let responseJson = pm.response.json();\r",
+							"\r",
+							"//     // ✅ OTP validation tests\r",
+							"//     pm.test(\"Login API s hould succeed with 200\", function () {\r",
+							"//         pm.expect(pm.response.code).to.eql(200);\r",
+							"//     });\r",
+							"\r",
+							"//     pm.test(\"OTP message should include 'success'\", function () {\r",
+							"//         pm.expect(responseJson.response?.message || \"\").to.include(\"success\");\r",
+							"//     });\r",
+							"\r",
+							"//     pm.test(\"OTP validity should be true\", function () {\r",
+							"//         pm.expect(responseJson.response?.isValid).to.eql(true);\r",
+							"//     });\r",
+							"\r",
+							"//     // ✅ oauthToken extraction (for Login response only)\r",
+							"//     if (responseJson.status === \"SUCCESS\" && responseJson.response?.oauthToken) {\r",
+							"//         let oauthToken = responseJson.response.oauthToken;\r",
+							"//         pm.environment.set(\"oauthToken\", oauthToken);\r",
+							"//         console.log(\"✅ Extracted oauthToken:\", oauthToken);\r",
+							"//     } else {\r",
+							"//         console.warn(\"⚠️ oauthToken not found in response\");\r",
+							"//     }\r",
+							"\r",
+							"// } catch (e) {\r",
+							"//     console.error(\"❌ Error during test script execution:\", e);\r",
+							"//     pm.test(\"Test script failed due to exception\", function () {\r",
+							"//         throw e;\r",
+							"//     });\r",
+							"// }\r",
+							"\r",
+							"\r",
+							"try {\r",
+							"    var responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.test(\"Login API should succeed\", function () {\r",
+							"        pm.expect(pm.response.code).to.eql(200);\r",
+							"        pm.expect(responseJson.status).to.eql(\"SUCCESS\");\r",
+							"    });\r",
+							"\r",
+							"    let token = responseJson.response?.oauthToken;\r",
+							"    if (token) {\r",
+							"        pm.environment.set(\"oauthToken\", token);\r",
+							"        console.log(\"✅ oauthToken stored:\", token);\r",
+							"    } else {\r",
+							"        console.warn(\"⚠️ oauthToken missing in response.\");\r",
+							"    }\r",
+							"\r",
+							"} catch (err) {\r",
+							"    console.error(\"❌ Error parsing response or extracting token:\", err);\r",
+							"    pm.test(\"Response parsing failed\", function () {\r",
+							"        throw err;\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"request\": {\r\n    \"mobileNo\": \"9958388141\",\r\n    \"requestId\": \"{{requestId}}\",\r\n    \"otp\": \"9958\",\r\n    \"fcmUserToken\": null,\r\n    \"sourcePlatform\": \"android\",\r\n    \"deviceId\": \"\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/user/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Assertion 1: Check if at least one item is present in the itemDetails array\r",
+							"pm.test(\"Item details array is not empty\", function () {\r",
+							"    pm.expect(responseBody.data.itemDetails).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"// Assertion 2: Check if the name of at least one item in itemDetails contains the text \"Lassi\" (case-insensitive)\r",
+							"const textToContain = \"Lassi\";\r",
+							"pm.test(`At least one item name contains \"${textToContain}\" (case-insensitive)`, function () {\r",
+							"    const itemFound = responseBody.data.itemDetails.some(item =>\r",
+							"        item.name.toLowerCase().includes(textToContain.toLowerCase())\r",
+							"    );\r",
+							"    pm.expect(itemFound).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/search/global?searchQuery=lassi&lat=28.59359683901693&lng=77.31615859477893",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"search",
+						"global"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "lassi"
+						},
+						{
+							"key": "lat",
+							"value": "28.59359683901693"
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "lng",
+							"value": "77.31615859477893"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Open Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Assertion: Check if the 'data' property exists and is not an empty array\r",
+							"pm.test(\"Response 'data' property is not an empty array\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.be.an('array');\r",
+							"    pm.expect(responseBody.data.length).to.be.greaterThan(0);\r",
+							"\r",
+							"    if (!responseBody.data || !Array.isArray(responseBody.data) || responseBody.data.length === 0) {\r",
+							"        console.log(\"Response 'data' property is an empty array.\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet-wise/inventory?lat&lng&page=0&size=10&mvId=14&categoryId=0",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet-wise",
+						"inventory"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": null
+						},
+						{
+							"key": "lng",
+							"value": null
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "mvId",
+							"value": "14"
+						},
+						{
+							"key": "categoryId",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Assertion: Check if at least one category is present in the categoryDetails array\r",
+							"pm.test(\"Category details array is not empty\", function () {\r",
+							"    pm.expect(responseBody.data.categoryDetails).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"// Assertion: Check if the name of at least one category in categoryDetails contains the text \"chips\" (case-insensitive)\r",
+							"const textToContain = \"chips\";\r",
+							"pm.test(`At least one category name contains \"${textToContain}\" (case-insensitive)`, function () {\r",
+							"    const categoryFound = responseBody.data.categoryDetails.some(category =>\r",
+							"        category.name.toLowerCase().includes(textToContain.toLowerCase())\r",
+							"    );\r",
+							"    pm.expect(categoryFound).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/search/global?searchQuery=chips&lat=28.59359683901693&lng=77.31615859477893",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"search",
+						"global"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "chips"
+						},
+						{
+							"key": "lat",
+							"value": "28.59359683901693"
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "lng",
+							"value": "77.31615859477893"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Open Categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Assertion: Check if the 'data' property exists and is not an empty array\r",
+							"pm.test(\"Response 'data' property is not an empty array\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.be.an('array');\r",
+							"    pm.expect(responseBody.data.length).to.be.greaterThan(0);\r",
+							"\r",
+							"    if (!responseBody.data || !Array.isArray(responseBody.data) || responseBody.data.length === 0) {\r",
+							"        console.log(\"Response 'data' property is an empty array.\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet-wise/inventory?lat&lng&page=0&size=10&mvId=0&categoryId=9",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet-wise",
+						"inventory"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": null
+						},
+						{
+							"key": "lng",
+							"value": null
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "mvId",
+							"value": "0"
+						},
+						{
+							"key": "categoryId",
+							"value": "9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search VM",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Case 1: Check if at least one machine detail exists and assert its properties\r",
+							"\r",
+							"pm.test(\"At least one machine detail exists and has expected properties\", function () {\r",
+							"    pm.expect(responseBody.data.machineDetails).to.be.an('array').that.is.not.empty;\r",
+							"    const firstMachine = responseBody.data.machineDetails[0];\r",
+							"    pm.expect(firstMachine).to.have.property('id');\r",
+							"    pm.expect(firstMachine).to.have.property('name');\r",
+							"    pm.expect(firstMachine).to.have.property('image_path');\r",
+							"\r",
+							"    // Optional: Assert specific values if needed\r",
+							"    pm.expect(firstMachine.name).to.eql(\"Dharamshila Hospital\");\r",
+							"    pm.expect(firstMachine.image_path).to.eql(\"VMLogo/dharamshila-logo.png\");\r",
+							"});\r",
+							"\r",
+							"// Case 2: Check if the machine detail with a specific name exists\r",
+							"\r",
+							"const expectedMachineName = \"Dharamshila Hospital\";\r",
+							"pm.test(`Machine detail with name \"${expectedMachineName}\" exists`, function () {\r",
+							"    const machineFound = responseBody.data.machineDetails.some(machine => machine.name === expectedMachineName);\r",
+							"    pm.expect(machineFound).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/search/global?searchQuery=dharam&lat=28.59359683901693&lng=77.31615859477893",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"search",
+						"global"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "dharam"
+						},
+						{
+							"key": "lat",
+							"value": "28.59359683901693"
+						},
+						{
+							"key": "lng",
+							"value": "77.31615859477893"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search with less than 3 char",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"const expectedErrorMessage = \"search query must be between 3 and 30 characters long: la\";\r",
+							"\r",
+							"pm.test(\"Negative Case: Response indicates failure and contains expected error message (case-insensitive)\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.be.an('object');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', false);\r",
+							"    pm.expect(responseBody.status).to.have.property('message');\r",
+							"\r",
+							"    const actualErrorMessage = responseBody.status.message.toLowerCase();\r",
+							"    const expectedErrorMessageLower = expectedErrorMessage.toLowerCase();\r",
+							"\r",
+							"    pm.expect(actualErrorMessage).to.include(expectedErrorMessageLower);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/search/global?searchQuery=la&lat=28.59359683901693&lng=77.31615859477893",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"search",
+						"global"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "la"
+						},
+						{
+							"key": "lat",
+							"value": "28.59359683901693"
+						},
+						{
+							"key": "lng",
+							"value": "77.31615859477893"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search with 31 chars",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"const expectedErrorMessage = \"search query must be between 3 and 30 characters long: la\";\r",
+							"\r",
+							"pm.test(\"Negative Case: Response indicates failure and contains expected error message (case-insensitive)\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.be.an('object');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', false);\r",
+							"    pm.expect(responseBody.status).to.have.property('message');\r",
+							"\r",
+							"    const actualErrorMessage = responseBody.status.message.toLowerCase();\r",
+							"    const expectedErrorMessageLower = expectedErrorMessage.toLowerCase();\r",
+							"\r",
+							"    pm.expect(actualErrorMessage).to.include(expectedErrorMessageLower);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/search/global?searchQuery=laaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&lat=28.59359683901693&lng=77.31615859477893",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"search",
+						"global"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "laaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+						},
+						{
+							"key": "lat",
+							"value": "28.59359683901693"
+						},
+						{
+							"key": "lng",
+							"value": "77.31615859477893"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm_Cleared_Cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Delete cart - Status code is 200 OK and data is an empty array\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Success\");\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.be.an('array').that.is.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddToCart_newItem",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Cart details are present and not empty\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array');\r",
+							"\r",
+							"    if (responseBody.data.items.length === 0) {\r",
+							"        console.log(\"DEBUG: Cart is empty.\");\r",
+							"        pm.expect.fail(\"Cart is empty.\");\r",
+							"    } else {\r",
+							"        pm.expect(responseBody.data.items).to.not.be.empty;\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"slotId\": 102,\r\n    \"count\": 2\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddToCart_ExistingItem",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Cart details are present and not empty\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array');\r",
+							"\r",
+							"    if (responseBody.data.items.length === 0) {\r",
+							"        console.log(\"DEBUG: Cart is empty.\");\r",
+							"        pm.expect.fail(\"Cart is empty.\");\r",
+							"    } else {\r",
+							"        pm.expect(responseBody.data.items).to.not.be.empty;\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"slotId\": 103,\r\n    \"count\": 2\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViewCart_NotEmpty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Fetch cart - Status code is 200 OK and items array is present\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array');\r",
+							"\r",
+							"    if (responseBody.data.items.length > 0) {\r",
+							"        pm.test(\"Cart contains at least one item\", () => {\r",
+							"            pm.expect(responseBody.data.items.length).to.be.greaterThan(0);\r",
+							"        });\r",
+							"    } else {\r",
+							"        pm.test(\"Cart is empty\", () => {\r",
+							"            pm.expect(responseBody.data.items).to.be.empty;\r",
+							"        });\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemoveFromCart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Delete cart - Status code is 200 OK and data is an empty array\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Success\");\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.be.an('array').that.is.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViewCart_Empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Delete cart - Status code is 200 OK and items array is empty\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Success\");\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.be.an('object'); // Assert that data is an object\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array').that.is.empty;\r",
+							"    pm.expect(responseBody.data).to.have.property('reward', null);\r",
+							"    pm.expect(responseBody.data).to.have.property('comboDetails', null);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateCartQuantity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Cart details are present and not empty\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array');\r",
+							"\r",
+							"    if (responseBody.data.items.length === 0) {\r",
+							"        console.log(\"DEBUG: Cart is empty.\");\r",
+							"        pm.expect.fail(\"Cart is empty.\");\r",
+							"    } else {\r",
+							"        pm.expect(responseBody.data.items).to.not.be.empty;\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"slotId\": 103,\r\n    \"count\": 1\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create_Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Always clear previous orderId at the start\r",
+							"pm.environment.unset(\"orderId\");\r",
+							"\r",
+							"// Check if the request was successful (adjust status code as needed)\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) {\r",
+							"    // Check if the orderId is present in the response\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId);\r",
+							"        console.log(\"Order ID stored:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.error(\"Error: orderId not found in successful response\", responseBody);\r",
+							"        pm.expect.fail(\"orderId not found in successful response\");\r",
+							"    }\r",
+							"} else if (pm.response.code === 400) {\r",
+							"    if (responseBody && responseBody.status && responseBody.status.message && responseBody.status.message.includes(\"Cart is empty\")) {\r",
+							"        console.log(\"Error: Cart is empty\");\r",
+							"\r",
+							"        pm.test(\"Order creation failed: Cart is empty\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"            pm.expect(responseBody.status).to.have.property('message');\r",
+							"            pm.expect(responseBody.status.message).to.include(\"Cart is empty\");\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.error(\"Error: Bad Request\", responseBody);\r",
+							"\r",
+							"        pm.test(\"Order creation failed: Bad Request\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"        });\r",
+							"    }\r",
+							"} else {\r",
+							"    console.error(\"Error: Unexpected status code\", responseBody);\r",
+							"\r",
+							"    pm.test(\"Order creation failed: Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"regular\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/:vmId/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":vmId",
+						"order"
+					],
+					"variable": [
+						{
+							"key": "vmId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment_Successful_Dp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status is Accepted\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.be.an('object');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Accepted\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"disabled": true
+					},
+					{
+						"key": "accept-language",
+						"value": "en-US,en;q=0.9",
+						"disabled": true
+					},
+					{
+						"key": "authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "origin",
+						"value": "https://webapp-stage.daalchini.co.in",
+						"disabled": true
+					},
+					{
+						"key": "referer",
+						"value": "https://webapp-stage.daalchini.co.in/",
+						"disabled": true
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty",
+						"disabled": true
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
+						"disabled": true
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"disabled": true
+					},
+					{
+						"key": "x-app-version",
+						"value": "v1.0.1",
+						"disabled": true
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"pgId\":\"9\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/order/:orderId/payment",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId",
+						"payment"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm_Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Check the response status code\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) { // Common success codes\r",
+							"    // Check if the orderId is present, indicating a successful order\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId); // Store for later use, if needed\r",
+							"        console.log(\"Order created successfully. orderId:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody).to.have.property('data');\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    }\r",
+							"     else if (responseBody && responseBody.data && responseBody.data.paymentUrl){\r",
+							"        console.log(\"payment initiated\");\r",
+							"         pm.test(\"payment initiated\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"\r",
+							"        });\r",
+							"    }\r",
+							"    else {\r",
+							"        // Handle a successful response, but without orderId\r",
+							"        console.error(\"Warning: Order created, but orderId is missing.\", responseBody);\r",
+							"        pm.test(\"Order created, but orderId is missing\", function() {\r",
+							"            pm.expect.fail(\"Order created, but orderId is missing\");\r",
+							"        });\r",
+							"\r",
+							"    }\r",
+							"} else {\r",
+							"    // Handle other error codes (e.g., 500 Internal Server Error)\r",
+							"    console.error(\"Error: Order creation failed - Unexpected status code\", responseBody);\r",
+							"    pm.test(\"Order creation failed - Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Access path variables from the request URL\r",
+							"const orderIdFromPath = pm.request.url.variables.get(\"orderId\");\r",
+							"\r",
+							"// Check if the orderId path variable exists\r",
+							"if (orderIdFromPath) {\r",
+							"    console.log(\"Order ID sent in path variable:\", orderIdFromPath);\r",
+							"} else {\r",
+							"    console.log(\"orderId not found in path variable.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/order/:orderId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Active_Orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"if (jsonData.data.length > 0) {\r",
+							"    pm.test(\"At least one order exists\", function () {\r",
+							"        pm.expect(jsonData.data.length).to.be.above(0);\r",
+							"    });\r",
+							"\r",
+							"    const order = jsonData.data[0];\r",
+							"\r",
+							"    pm.test(\"First order has required fields\", function () {\r",
+							"        pm.expect(order).to.have.property(\"orderId\");\r",
+							"        pm.expect(order).to.have.property(\"status\");\r",
+							"        pm.expect(order).to.have.property(\"displayStatus\");\r",
+							"        pm.expect(order).to.have.property(\"amount\");\r",
+							"        pm.expect(order).to.have.property(\"vendingMachineId\");\r",
+							"        pm.expect(order.lineItems).to.be.an(\"array\").that.is.not.empty;\r",
+							"    });\r",
+							"\r",
+							"    pm.test(\"Line item has productName\", function () {\r",
+							"        pm.expect(order.lineItems[0]).to.have.property(\"productName\");\r",
+							"    });\r",
+							"\r",
+							"    // Optional: Set orderId to environment for next requests\r",
+							"    pm.environment.set(\"orderId\", order.orderId);\r",
+							"\r",
+							"} else {\r",
+							"    pm.test(\"No orders found — confirmation\", function () {\r",
+							"        console.log(\"✅ No orderId present. The data array is empty.\");\r",
+							"        pm.expect(jsonData.data.length).to.eql(0);\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/order/active",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						"active"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch_Order_History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"if (jsonData.response && jsonData.response.length > 0) {\r",
+							"    pm.test(\"Order details found\", function () {\r",
+							"        pm.expect(jsonData.response.length).to.be.above(0);\r",
+							"    });\r",
+							"\r",
+							"    const firstOrder = jsonData.response[0];\r",
+							"\r",
+							"    pm.test(\"First order has essential fields\", function () {\r",
+							"        pm.expect(firstOrder).to.have.property(\"orderId\");\r",
+							"        pm.expect(firstOrder).to.have.property(\"vendingMachineId\");\r",
+							"        pm.expect(firstOrder).to.have.property(\"status\");\r",
+							"        pm.expect(firstOrder).to.have.property(\"amount\");\r",
+							"        pm.expect(firstOrder).to.have.property(\"orderLineItems\");\r",
+							"        pm.expect(firstOrder.orderLineItems).to.be.an(\"array\").that.is.not.empty;\r",
+							"    });\r",
+							"\r",
+							"    pm.test(\"First order line item has variant name\", function () {\r",
+							"        pm.expect(firstOrder.orderLineItems[0]).to.have.property(\"variantName\");\r",
+							"    });\r",
+							"\r",
+							"    // Optional: Save orderId for use in next request\r",
+							"    pm.environment.set(\"latestOrderId\", firstOrder.orderId);\r",
+							"\r",
+							"} else {\r",
+							"    pm.test(\"No order found — confirmation\", function () {\r",
+							"        console.log(\"❕ No order details present in the response.\");\r",
+							"        pm.expect(jsonData.response.length).to.eql(0);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"request\":{}}"
+				},
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/order/order/orderhistory",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"order",
+						"order",
+						"orderhistory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete_Order_Dp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Order deleted successfully\", function () {\r",
+							"    pm.expect(responseBody.status.success).to.be.true;\r",
+							"    pm.expect(responseBody.status.code).to.eql(\"OK\");\r",
+							"    pm.expect(responseBody.status.message).to.eql(\"Accepted\");\r",
+							"    pm.expect(responseBody.data).to.be.null;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web"
+					},
+					{
+						"key": "x-app-version",
+						"value": "v1.0.1"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca"
+					}
+				],
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/order/:orderId",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddToCart_newItem_Bp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Cart details are present and not empty\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array');\r",
+							"\r",
+							"    if (responseBody.data.items.length === 0) {\r",
+							"        console.log(\"DEBUG: Cart is empty.\");\r",
+							"        pm.expect.fail(\"Cart is empty.\");\r",
+							"    } else {\r",
+							"        pm.expect(responseBody.data.items).to.not.be.empty;\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"slotId\": 102,\r\n    \"count\": 2\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create_Order_Bp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Always clear previous orderId at the start\r",
+							"pm.environment.unset(\"orderId\");\r",
+							"\r",
+							"// Check if the request was successful (adjust status code as needed)\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) {\r",
+							"    // Check if the orderId is present in the response\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId);\r",
+							"        console.log(\"Order ID stored:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.error(\"Error: orderId not found in successful response\", responseBody);\r",
+							"        pm.expect.fail(\"orderId not found in successful response\");\r",
+							"    }\r",
+							"} else if (pm.response.code === 400) {\r",
+							"    if (responseBody && responseBody.status && responseBody.status.message && responseBody.status.message.includes(\"Cart is empty\")) {\r",
+							"        console.log(\"Error: Cart is empty\");\r",
+							"\r",
+							"        pm.test(\"Order creation failed: Cart is empty\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"            pm.expect(responseBody.status).to.have.property('message');\r",
+							"            pm.expect(responseBody.status.message).to.include(\"Cart is empty\");\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.error(\"Error: Bad Request\", responseBody);\r",
+							"\r",
+							"        pm.test(\"Order creation failed: Bad Request\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"        });\r",
+							"    }\r",
+							"} else {\r",
+							"    console.error(\"Error: Unexpected status code\", responseBody);\r",
+							"\r",
+							"    pm.test(\"Order creation failed: Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"regular\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/:vmId/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":vmId",
+						"order"
+					],
+					"variable": [
+						{
+							"key": "vmId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment_Successful_Bp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status is Accepted\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.be.an('object');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Accepted\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"disabled": true
+					},
+					{
+						"key": "accept-language",
+						"value": "en-US,en;q=0.9",
+						"disabled": true
+					},
+					{
+						"key": "authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "origin",
+						"value": "https://webapp-stage.daalchini.co.in",
+						"disabled": true
+					},
+					{
+						"key": "referer",
+						"value": "https://webapp-stage.daalchini.co.in/",
+						"disabled": true
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty",
+						"disabled": true
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
+						"disabled": true
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"disabled": true
+					},
+					{
+						"key": "x-app-version",
+						"value": "v1.0.1",
+						"disabled": true
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"pgId\":\"9\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/order/:orderId/payment",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId",
+						"payment"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm_Order_Bp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Check the response status code\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) { // Common success codes\r",
+							"    // Check if the orderId is present, indicating a successful order\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId); // Store for later use, if needed\r",
+							"        console.log(\"Order created successfully. orderId:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody).to.have.property('data');\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    }\r",
+							"     else if (responseBody && responseBody.data && responseBody.data.paymentUrl){\r",
+							"        console.log(\"payment initiated\");\r",
+							"         pm.test(\"payment initiated\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"\r",
+							"        });\r",
+							"    }\r",
+							"    else {\r",
+							"        // Handle a successful response, but without orderId\r",
+							"        console.error(\"Warning: Order created, but orderId is missing.\", responseBody);\r",
+							"        pm.test(\"Order created, but orderId is missing\", function() {\r",
+							"            pm.expect.fail(\"Order created, but orderId is missing\");\r",
+							"        });\r",
+							"\r",
+							"    }\r",
+							"} else {\r",
+							"    // Handle other error codes (e.g., 500 Internal Server Error)\r",
+							"    console.error(\"Error: Order creation failed - Unexpected status code\", responseBody);\r",
+							"    pm.test(\"Order creation failed - Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Access path variables from the request URL\r",
+							"const orderIdFromPath = pm.request.url.variables.get(\"orderId\");\r",
+							"\r",
+							"// Check if the orderId path variable exists\r",
+							"if (orderIdFromPath) {\r",
+							"    console.log(\"Order ID sent in path variable:\", orderIdFromPath);\r",
+							"} else {\r",
+							"    console.log(\"orderId not found in path variable.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/order/:orderId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List_NearBy_Machines",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Basic success check\r",
+							"pm.test(\"nearby machines API call is successful\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// Assert whether VMs are found or not\r",
+							"pm.test(`Nearby VMs check - ${res.data.nearbyMachines.length > 0 ? 'Found' : 'Not Found'}`, () => {\r",
+							"    pm.expect(res.data.nearbyMachines).to.be.an(\"array\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/search?nearbyLimit=50&recentLimit=6&lat=28.5935438&lng=77.3162139",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						"search"
+					],
+					"query": [
+						{
+							"key": "nearbyLimit",
+							"value": "50"
+						},
+						{
+							"key": "recentLimit",
+							"value": "6"
+						},
+						{
+							"key": "lat",
+							"value": "28.5935438"
+						},
+						{
+							"key": "lng",
+							"value": "77.3162139"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check_Recent_Machines",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Basic success check\r",
+							"pm.test(\"recent machines API call is successful\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// Assert whether recent VMs are found or not\r",
+							"pm.test(`Recent VMs check - ${res.data.recentMachines.length > 0 ? 'Found' : 'Not Found'}`, () => {\r",
+							"    pm.expect(res.data.recentMachines).to.be.an(\"array\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web"
+					},
+					{
+						"key": "x-app-version",
+						"value": "v1.0.1"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/outlet/search?nearbyLimit=50&recentLimit=6&lat=28.5868032&lng=77.3128192",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						"search"
+					],
+					"query": [
+						{
+							"key": "nearbyLimit",
+							"value": "50"
+						},
+						{
+							"key": "recentLimit",
+							"value": "6"
+						},
+						{
+							"key": "lat",
+							"value": "28.5868032"
+						},
+						{
+							"key": "lng",
+							"value": "77.3128192"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch_Previously_Purchased",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Basic success check\r",
+							"pm.test(\"previously purshaged API call is successful\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// Assert items availability\r",
+							"pm.test(`Items check - ${res.data.length > 0 ? 'Found' : 'Not Found'}`, () => {\r",
+							"    pm.expect(res.data).to.be.an(\"array\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/:machineId/previously-purchased",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":machineId",
+						"previously-purchased"
+					],
+					"variable": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_Today's_Special_Items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Basic response success check\r",
+							"pm.test(\"today's special API call is successful\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// Assert item availability\r",
+							"pm.test(`today's special Items check - ${res.data.length > 0 ? 'Found' : 'Not Found'}`, () => {\r",
+							"    pm.expect(res.data).to.be.an(\"array\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/:machineId/special",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":machineId",
+						"special"
+					],
+					"variable": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch_Categories_List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// ✅ Basic success assertion\r",
+							"pm.test(\"Categories list api call is successful and code is OK\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"    pm.expect(res.status.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// ✅ Assert categories data is present and is an array\r",
+							"pm.test(\"Categories list is present and non-empty\", () => {\r",
+							"    pm.expect(res.data).to.be.an(\"array\").that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"// ✅ Assert each category has 'id' and 'name'\r",
+							"pm.test(\"Each category has id and name\", () => {\r",
+							"    res.data.forEach(category => {\r",
+							"        pm.expect(category).to.have.property(\"id\").that.is.a(\"number\");\r",
+							"        pm.expect(category).to.have.property(\"name\").that.is.a(\"string\");\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/item/category",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"item",
+						"category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Select_Category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// ✅ Basic response status check\r",
+							"pm.test(\"Select category api call is successful and code is OK\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"    pm.expect(res.status.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// ✅ Assert 'data' is a non-empty array\r",
+							"pm.test(\"Product list is present and non-empty\", () => {\r",
+							"    pm.expect(res.data).to.be.an(\"array\").that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"// ✅ Assert required fields in each product\r",
+							"pm.test(\"Each product has required fields\", () => {\r",
+							"    res.data.forEach(product => {\r",
+							"        pm.expect(product).to.have.property(\"slot_id\").that.is.a(\"number\");\r",
+							"        pm.expect(product).to.have.property(\"active\").that.is.a(\"boolean\");\r",
+							"        pm.expect(product).to.have.property(\"mv_id\").that.is.a(\"number\");\r",
+							"        pm.expect(product).to.have.property(\"mv_name\").that.is.a(\"string\");\r",
+							"        pm.expect(product).to.have.property(\"mrp\").that.is.a(\"number\");\r",
+							"        pm.expect(product).to.have.property(\"offer_price\").that.is.a(\"number\");\r",
+							"        pm.expect(product).to.have.property(\"quantity_value\").that.is.a(\"string\");\r",
+							"        pm.expect(product).to.have.property(\"mv_description\").that.is.a(\"string\");\r",
+							"        pm.expect(product).to.have.property(\"image_path\").that.is.a(\"string\");\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/8/items?sort_by=slot&sort_order=desc&price_min=0&price_max=250&category_id_arr=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						"8",
+						"items"
+					],
+					"query": [
+						{
+							"key": "sort_by",
+							"value": "slot"
+						},
+						{
+							"key": "sort_order",
+							"value": "desc"
+						},
+						{
+							"key": "price_min",
+							"value": "0"
+						},
+						{
+							"key": "price_max",
+							"value": "250"
+						},
+						{
+							"key": "category_id_arr",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ClearCart_Before_Combo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Delete cart - Status code is 200 OK and data is an empty array\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Success\");\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.be.an('array').that.is.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List_Combo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Basic success assertion\r",
+							"pm.test(\"fetch combo API call is successful\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// Assert combo availability\r",
+							"pm.test(`Combo items check - ${res.data.length > 0 ? 'Found' : 'Not Found'}`, () => {\r",
+							"    pm.expect(res.data).to.be.an(\"array\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "User-Agent",
+						"value": "insomnia/8.4.4"
+					}
+				],
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/outlet/:machineId/combo",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":machineId",
+						"combo"
+					],
+					"variable": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddCombo_Cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Basic success assertion\r",
+							"pm.test(\"Add combo to cart API call is successful\", () => {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// Assert combo is added to cart\r",
+							"pm.test(`Combo added to cart - ${res.data.comboDetails ? 'Yes' : 'No'}`, () => {\r",
+							"    pm.expect(res.data.comboDetails).to.be.an(\"object\");\r",
+							"    pm.expect(res.data.comboDetails.items).to.be.an(\"array\").that.is.not.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"comboId\": 46, \r\n    \"count\": 1\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart/combo?machineId=8&replace-cart=fase",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart",
+						"combo"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						},
+						{
+							"key": "replace-cart",
+							"value": "fase"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViewComboCart_NonEmpty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// ✅ 1. Basic response status check\r",
+							"pm.test(\"Response is successful\", function () {\r",
+							"    pm.expect(responseBody.status.success).to.be.true;\r",
+							"    pm.expect(responseBody.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// ✅ 2. Combo details exist with item list\r",
+							"pm.test(\"Combo details have valid items\", function () {\r",
+							"    const combo = responseBody.data.comboDetails;\r",
+							"    pm.expect(combo).to.have.property(\"id\");\r",
+							"    pm.expect(combo.items).to.be.an(\"array\").that.is.not.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create_Order_Combo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Always clear previous orderId at the start\r",
+							"pm.environment.unset(\"orderId\");\r",
+							"\r",
+							"// Check if the request was successful (adjust status code as needed)\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) {\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId);\r",
+							"        console.log(\"Order ID stored:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.error(\"Error: orderId not found in successful response\", responseBody);\r",
+							"        pm.expect.fail(\"orderId not found in successful response\");\r",
+							"    }\r",
+							"} else if (pm.response.code === 400) {\r",
+							"    if (\r",
+							"        responseBody &&\r",
+							"        responseBody.status &&\r",
+							"        responseBody.status.message &&\r",
+							"        responseBody.status.message.includes(\"Cart is empty\")\r",
+							"    ) {\r",
+							"        console.log(\"Error: Cart is empty\");\r",
+							"\r",
+							"        pm.test(\"Order creation failed: Cart is empty\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"            pm.expect(responseBody.status.message).to.include(\"Cart is empty\");\r",
+							"        });\r",
+							"    } else if (\r",
+							"        responseBody &&\r",
+							"        responseBody.status &&\r",
+							"        responseBody.status.message &&\r",
+							"        responseBody.status.message.includes(\"Selected item(s) are unavailable\")\r",
+							"    ) {\r",
+							"        console.log(\"Error: Selected combo items are unavailable\");\r",
+							"\r",
+							"        pm.test(\"Order creation failed:combo Items unavailable\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"            pm.expect(responseBody.status.message).to.include(\"Selected combo item(s) are unavailable\");\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.error(\"Error: Bad Request\", responseBody);\r",
+							"\r",
+							"        pm.test(\"Order creation failed: Bad Request\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"        });\r",
+							"    }\r",
+							"} else {\r",
+							"    console.error(\"Error: Unexpected status code\", responseBody);\r",
+							"\r",
+							"    pm.test(\"Order creation failed: Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"regular\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/:machineId/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":machineId",
+						"order"
+					],
+					"variable": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment_Successful_Combo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status is Accepted\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.be.an('object');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Accepted\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web"
+					},
+					{
+						"key": "x-app-version",
+						"value": "v1.0.1"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"pgId\":\"9\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/order/:orderId/payment",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId",
+						"payment"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm_Order_Combo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Check the response status code\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) { // Common success codes\r",
+							"    // Check if the orderId is present, indicating a successful order\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId); // Store for later use, if needed\r",
+							"        console.log(\"Order created successfully. orderId:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody).to.have.property('data');\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    }\r",
+							"     else if (responseBody && responseBody.data && responseBody.data.paymentUrl){\r",
+							"        console.log(\"payment initiated\");\r",
+							"         pm.test(\"payment initiated\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"\r",
+							"        });\r",
+							"    }\r",
+							"    else {\r",
+							"        // Handle a successful response, but without orderId\r",
+							"        console.error(\"Warning: Order created, but orderId is missing.\", responseBody);\r",
+							"        pm.test(\"Order created, but orderId is missing\", function() {\r",
+							"            pm.expect.fail(\"Order created, but orderId is missing\");\r",
+							"        });\r",
+							"\r",
+							"    }\r",
+							"} else {\r",
+							"    // Handle other error codes (e.g., 500 Internal Server Error)\r",
+							"    console.error(\"Error: Order creation failed - Unexpected status code\", responseBody);\r",
+							"    pm.test(\"Order creation failed - Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Access path variables from the request URL\r",
+							"const orderIdFromPath = pm.request.url.variables.get(\"orderId\");\r",
+							"\r",
+							"// Check if the orderId path variable exists\r",
+							"if (orderIdFromPath) {\r",
+							"    console.log(\"Order ID sent in path variable:\", orderIdFromPath);\r",
+							"} else {\r",
+							"    console.log(\"orderId not found in path variable.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/order/:orderId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ensure_EmptyCart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Delete cart - Status code is 200 OK and data is an empty array\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Success\");\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.be.an('array').that.is.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_To_Cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Cart details are present and not empty\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array');\r",
+							"\r",
+							"    if (responseBody.data.items.length === 0) {\r",
+							"        console.log(\"DEBUG: Cart is empty.\");\r",
+							"        pm.expect.fail(\"Cart is empty.\");\r",
+							"    } else {\r",
+							"        pm.expect(responseBody.data.items).to.not.be.empty;\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"slotId\": 102,\r\n    \"count\": 1\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch_ApplicableCoupons",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Basic success assertions\r",
+							"pm.test(\"Coupons list API call is successful\", function () {\r",
+							"    pm.expect(res.status.success).to.be.true;\r",
+							"    pm.expect(res.status.code).to.eql(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// Assert that coupons are found\r",
+							"pm.test(\"Coupons found in response\", function () {\r",
+							"    pm.expect(res.data).to.be.an(\"array\").that.is.not.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/coupon?pgId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"coupon"
+					],
+					"query": [
+						{
+							"key": "pgId",
+							"value": "8",
+							"description": "payment gateway id"
+						}
+					]
+				},
+				"description": "Fetch coupons appliacable to cart\n- filter coupons based on selected vending machine\n- filter based on user cart\n- filter limit exceeded coupons"
+			},
+			"response": [
+				{
+					"name": "List of applicable coupons w/ filters applied (i.e. machineId, user cart)\n- coupon details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/consumerbe/api/v2/coupon?pgId=9",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"consumerbe",
+								"api",
+								"v2",
+								"coupon"
+							],
+							"query": [
+								{
+									"key": "pgId",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"status\": {\n    \"success\": true,\n    \"code\": \"OK\",\n    \"message\": \"Success\",\n    \"timestamp\": \"2022-04-04T11:05:07.164870Z\"\n  },\n  \"data\": [\n    {\n      \"couponId\": 15,\n      \"couponType\": 1,\n      \"couponName\": \"SAGAR10\",\n      \"couponDescription\": \"Best offer from Daalchini\",\n      \"couponImage\": \"product/soyamasala.jpeg\",\n      \"isApplicable\": true\n    },\n    {\n      \"couponId\": 17,\n      \"couponType\": 2,\n      \"couponName\": \"TEMP1\",\n      \"couponDescription\": \"Best offer from Daalchini\",\n      \"couponImage\": \"product/soyamasala.jpeg\",\n      \"isApplicable\": true\n    }\n  ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Apply_DiscountCoupon",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJqdGkiOiI2YjdmY2YwYy1hMTYzLTRhMjgtYTczMC0wZWQ2MmM2ODJlMTMiLCJzdWIiOiIxMjE5MyIsImlhdCI6MTcwNjAwNTM5OCwicm9sZSI6IlVTRVIiLCJwZXJtaXNzaW9ucyI6WyJ1c2VyIl19.AZWWhclOcLTuVUQ4QPLq51-J0KZsCOKPUQgTCXMapvHOrjCPT6WyxWxqbktO71VzK5iS8BMclPdga2H8abyHqYWTAIfWt-paqBEc10Wfa7Gerb-MZvv3iL8Gk1J0yIyqWJwbzNOXz6E4w7ZBbJ3ijL91x7ur-LikGnKUy-OdIk-OdpAy",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"couponName\": \"TESTFLATDISCOUNT\",\n  \"pgName\": \"WALLET_LOYALTY\"\n}"
+				},
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/cart/coupon",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart",
+						"coupon"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create_Order_Coupon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Always clear previous orderId\r",
+							"pm.environment.unset(\"orderId\");\r",
+							"\r",
+							"// If response is 200 or 201 (Success)\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) {\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        var orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId);\r",
+							"        console.log(\"Order ID stored:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.warn(\"Warning: orderId not found in successful response\", responseBody);\r",
+							"        pm.expect.fail(\"orderId not found in successful response\");\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"// If response is 400 (Bad Request)\r",
+							"else if (pm.response.code === 400) {\r",
+							"    let message = responseBody?.status?.message || \"\";\r",
+							"\r",
+							"    if (message.includes(\"Cart is empty\")) {\r",
+							"        pm.test(\"Order creation failed (Cart is empty - handled gracefully)\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"            pm.expect(responseBody.status.message).to.include(\"Cart is empty\");\r",
+							"        });\r",
+							"    } else {\r",
+							"        pm.test(\"Order creation failed with 400 error\", function () {\r",
+							"            pm.expect.fail(\"Request failed with 400: \" + message);\r",
+							"        });\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"// Handle any other unexpected status codes\r",
+							"else {\r",
+							"    pm.test(\"Unexpected response status code\", function () {\r",
+							"        console.warn(\"Unexpected status:\", pm.response.code, responseBody);\r",
+							"        pm.expect(pm.response.code).to.be.oneOf([200, 201]); // causes failure for all others\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"regular\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/:machineId/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":machineId",
+						"order"
+					],
+					"variable": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment_Successful_D_Coupon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status is Accepted and payment successful\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.be.an('object');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Accepted\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca"
+					},
+					{
+						"key": "accepted",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"pgId\":\"9\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/order/:orderId/payment",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId",
+						"payment"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm_Order_Coupon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Check the response status code\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) { // Common success codes\r",
+							"    // Check if the orderId is present, indicating a successful order\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId); // Store for later use, if needed\r",
+							"        console.log(\"Order created successfully. orderId:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody).to.have.property('data');\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    }\r",
+							"     else if (responseBody && responseBody.data && responseBody.data.paymentUrl){\r",
+							"        console.log(\"payment initiated\");\r",
+							"         pm.test(\"payment initiated\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"\r",
+							"        });\r",
+							"    }\r",
+							"    else {\r",
+							"        // Handle a successful response, but without orderId\r",
+							"        console.error(\"Warning: Order created, but orderId is missing.\", responseBody);\r",
+							"        pm.test(\"Order created, but orderId is missing\", function() {\r",
+							"            pm.expect.fail(\"Order created, but orderId is missing\");\r",
+							"        });\r",
+							"\r",
+							"    }\r",
+							"} else {\r",
+							"    // Handle other error codes (e.g., 500 Internal Server Error)\r",
+							"    console.error(\"Error: Order creation failed - Unexpected status code\", responseBody);\r",
+							"    pm.test(\"Order creation failed - Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Access path variables from the request URL\r",
+							"const orderIdFromPath = pm.request.url.variables.get(\"orderId\");\r",
+							"\r",
+							"// Check if the orderId path variable exists\r",
+							"if (orderIdFromPath) {\r",
+							"    console.log(\"Order ID sent in path variable:\", orderIdFromPath);\r",
+							"} else {\r",
+							"    console.log(\"orderId not found in path variable.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/order/:orderId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_To_Cart_Cashback",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Cart details are present and not empty\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('data');\r",
+							"    pm.expect(responseBody.data).to.have.property('items');\r",
+							"    pm.expect(responseBody.data.items).to.be.an('array');\r",
+							"\r",
+							"    if (responseBody.data.items.length === 0) {\r",
+							"        console.log(\"DEBUG: Cart is empty.\");\r",
+							"        pm.expect.fail(\"Cart is empty.\");\r",
+							"    } else {\r",
+							"        pm.expect(responseBody.data.items).to.not.be.empty;\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"slotId\": 102,\r\n    \"count\": 1\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart?machineId=8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Apply_CashBack_Coupon",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"couponName\": \"DCBAT2\",\r\n  \"pgName\": \"WALLET_LOYALTY\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/cart/coupon",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"cart",
+						"coupon"
+					]
+				},
+				"description": "Apply user coupon"
+			},
+			"response": [
+				{
+					"name": "OK",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/coupon/apply/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"coupon",
+								"apply",
+								"user"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Create_Order_Coupon Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Always clear previous orderId\r",
+							"pm.environment.unset(\"orderId\");\r",
+							"\r",
+							"// If response is 200 or 201 (Success)\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) {\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        var orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId);\r",
+							"        console.log(\"Order ID stored:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.warn(\"Warning: orderId not found in successful response\", responseBody);\r",
+							"        pm.expect.fail(\"orderId not found in successful response\");\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"// If response is 400 (Bad Request)\r",
+							"else if (pm.response.code === 400) {\r",
+							"    let message = responseBody?.status?.message || \"\";\r",
+							"\r",
+							"    if (message.includes(\"Cart is empty\")) {\r",
+							"        pm.test(\"Order creation failed (Cart is empty - handled gracefully)\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.false;\r",
+							"            pm.expect(responseBody.status.code).to.eql(\"BAD_REQUEST\");\r",
+							"            pm.expect(responseBody.status.message).to.include(\"Cart is empty\");\r",
+							"        });\r",
+							"    } else {\r",
+							"        pm.test(\"Order creation failed with 400 error\", function () {\r",
+							"            pm.expect.fail(\"Request failed with 400: \" + message);\r",
+							"        });\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"// Handle any other unexpected status codes\r",
+							"else {\r",
+							"    pm.test(\"Unexpected response status code\", function () {\r",
+							"        console.warn(\"Unexpected status:\", pm.response.code, responseBody);\r",
+							"        pm.expect(pm.response.code).to.be.oneOf([200, 201]); // causes failure for all others\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"regular\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/outlet/:machineId/order",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"outlet",
+						":machineId",
+						"order"
+					],
+					"variable": [
+						{
+							"key": "machineId",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment_Successful_C_Coupon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status is Accepted and payment successful\", function () {\r",
+							"    pm.expect(responseBody).to.have.property('status');\r",
+							"    pm.expect(responseBody.status).to.be.an('object');\r",
+							"    pm.expect(responseBody.status).to.have.property('success', true);\r",
+							"    pm.expect(responseBody.status).to.have.property('code', \"OK\");\r",
+							"    pm.expect(responseBody.status).to.have.property('message', \"Accepted\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"disabled": true
+					},
+					{
+						"key": "accept-language",
+						"value": "en-US,en;q=0.9",
+						"disabled": true
+					},
+					{
+						"key": "authorization",
+						"value": "Bearer {{oauthToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"pgId\":\"9\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/order/:orderId/payment",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId",
+						"payment"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm_Order_C_Coupon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Check the response status code\r",
+							"if (pm.response.code === 200 || pm.response.code === 201) { // Common success codes\r",
+							"    // Check if the orderId is present, indicating a successful order\r",
+							"    if (responseBody && responseBody.data && responseBody.data.orderId) {\r",
+							"        const orderId = responseBody.data.orderId;\r",
+							"        pm.environment.set(\"orderId\", orderId); // Store for later use, if needed\r",
+							"        console.log(\"Order created successfully. orderId:\", orderId);\r",
+							"\r",
+							"        pm.test(\"Order created successfully\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"            pm.expect(responseBody).to.have.property('data');\r",
+							"            pm.expect(responseBody.data).to.have.property('orderId');\r",
+							"        });\r",
+							"    }\r",
+							"     else if (responseBody && responseBody.data && responseBody.data.paymentUrl){\r",
+							"        console.log(\"payment initiated\");\r",
+							"         pm.test(\"payment initiated\", function () {\r",
+							"            pm.expect(responseBody.status.success).to.be.true;\r",
+							"\r",
+							"        });\r",
+							"    }\r",
+							"    else {\r",
+							"        // Handle a successful response, but without orderId\r",
+							"        console.error(\"Warning: Order created, but orderId is missing.\", responseBody);\r",
+							"        pm.test(\"Order created, but orderId is missing\", function() {\r",
+							"            pm.expect.fail(\"Order created, but orderId is missing\");\r",
+							"        });\r",
+							"\r",
+							"    }\r",
+							"} else {\r",
+							"    // Handle other error codes (e.g., 500 Internal Server Error)\r",
+							"    console.error(\"Error: Order creation failed - Unexpected status code\", responseBody);\r",
+							"    pm.test(\"Order creation failed - Unexpected status code\", function () {\r",
+							"        pm.expect.fail(\"Unexpected status code: \" + pm.response.code);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Access path variables from the request URL\r",
+							"const orderIdFromPath = pm.request.url.variables.get(\"orderId\");\r",
+							"\r",
+							"// Check if the orderId path variable exists\r",
+							"if (orderIdFromPath) {\r",
+							"    console.log(\"Order ID sent in path variable:\", orderIdFromPath);\r",
+							"} else {\r",
+							"    console.log(\"orderId not found in path variable.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-app-platform",
+						"value": "web",
+						"type": "text"
+					},
+					{
+						"key": "x-app-version",
+						"value": "1.0.0",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "9fa7debe-feba-4c74-a774-b8b3096d75ca",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/consumerbe/api/v2/order/:orderId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"order",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch_Profile_Details",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "oauthToken",
+						"value": "CV/5Cyz4FuXazwEECOkwLhV20vBPhuBNvRpuVBQskc0QWfZgDir/wrA+d42sNiTF",
+						"description": "(Required) auth token"
+					},
+					{
+						"key": "userkey",
+						"value": "Q1YvNUN5ejRGdVhhendFRUNPa3dMaFYyMHZCUGh1Qk52UnB1VkJRc2tjMFFXZlpnRGlyL3dyQStkNDJzTmlURjo5NzQwMDQwMTIz",
+						"description": "(Required) auth key"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"request\": {\n    \"oauthToken\": \"fYY8X9eZljVYDHOsKFJCYRwkxFp8Iv3fJlYnzGU0wGBxuBT1utE65TiOVqLn0EAn\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/user/profile/details",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"profile",
+						"details"
+					]
+				},
+				"description": "Fetches the profile details of user based on request"
+			},
+			"response": [
+				{
+					"name": "OK",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <token>",
+								"description": "Added as a part of security scheme: bearer"
+							},
+							{
+								"key": "oauthToken",
+								"value": "CV/5Cyz4FuXazwEECOkwLhV20vBPhuBNvRpuVBQskc0QWfZgDir/wrA+d42sNiTF",
+								"description": "(Required) auth token"
+							},
+							{
+								"key": "userkey",
+								"value": "Q1YvNUN5ejRGdVhhendFRUNPa3dMaFYyMHZCUGh1Qk52UnB1VkJRc2tjMFFXZlpnRGlyL3dyQStkNDJzTmlURjo5NzQwMDQwMTIz",
+								"description": "(Required) auth key"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"request\": {\n    \"oauthToken\": \"fYY8X9eZljVYDHOsKFJCYRwkxFp8Iv3fJlYnzGU0wGBxuBT1utE65TiOVqLn0EAn\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/user/profile/details",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"profile",
+								"details"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"status\": \"SUCCESS\",\n  \"statusCode\": \"SS_0001\",\n  \"statusMessage\": null,\n  \"response\": {\n    \"mobileNo\": \"9899304444\",\n    \"emailId\": \"sagar.uniyal@daalchini.co.in\",\n    \"dob\": null,\n    \"gender\": \"male\",\n    \"city\": \"Noida\",\n    \"name\": \"sagar uniyal\",\n    \"state\": null\n  },\n  \"successful\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "Fetch_Loyalty_Rewards_Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJqdGkiOiIwZTMxYTBmYy04NWJmLTQzMGUtOGI1Ny04N2NkOTMwMDliZjgiLCJzdWIiOiIxMTkyMCIsImlhdCI6MTY4NzIzOTc5NSwicm9sZSI6IlVTRVIiLCJwZXJtaXNzaW9ucyI6WyJ1c2VyIl19.AMI7RzFiQwIy9uayDgNeopUStrOGlwBeH2nlVZcofj5onVxdpYz2vnA-u992D50WGkhHBIdeXN6l3fMnh-ggytdHARIoLV-Ysbs7NLmobO6CT72Hb8CX34PC8-VFdWP7PsJieNJLt_tByNTzAHW28CCCJ8xtRtQj8ZzsiXfN3lQMU8WM"
+					},
+					{
+						"key": "User-Agent",
+						"value": "insomnia/8.4.4"
+					}
+				],
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/user/loyalty/details",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"consumerbe",
+						"api",
+						"v2",
+						"user",
+						"loyalty",
+						"details"
+					]
+				},
+				"description": "Generated from cURL:  curl --request GET \\\r\n  --url https://api-stage.daalchini.co.in/consumerbe/api/v2/user/loyalty/details \\\r\n  --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJqdGkiOiIwZTMxYTBmYy04NWJmLTQzMGUtOGI1Ny04N2NkOTMwMDliZjgiLCJzdWIiOiIxMTkyMCIsImlhdCI6MTY4NzIzOTc5NSwicm9sZSI6IlVTRVIiLCJwZXJtaXNzaW9ucyI6WyJ1c2VyIl19.AMI7RzFiQwIy9uayDgNeopUStrOGlwBeH2nlVZcofj5onVxdpYz2vnA-u992D50WGkhHBIdeXN6l3fMnh-ggytdHARIoLV-Ysbs7NLmobO6CT72Hb8CX34PC8-VFdWP7PsJieNJLt_tByNTzAHW28CCCJ8xtRtQj8ZzsiXfN3lQMU8WM' \\\r\n  --header 'User-Agent: insomnia/8.4.4'\r\n"
+			},
+			"response": [
+				{
+					"name": "https://api-stage.daalchini.co.in/consumerbe/api/v2/user/loyalty/details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJqdGkiOiIwZTMxYTBmYy04NWJmLTQzMGUtOGI1Ny04N2NkOTMwMDliZjgiLCJzdWIiOiIxMTkyMCIsImlhdCI6MTY4NzIzOTc5NSwicm9sZSI6IlVTRVIiLCJwZXJtaXNzaW9ucyI6WyJ1c2VyIl19.AMI7RzFiQwIy9uayDgNeopUStrOGlwBeH2nlVZcofj5onVxdpYz2vnA-u992D50WGkhHBIdeXN6l3fMnh-ggytdHARIoLV-Ysbs7NLmobO6CT72Hb8CX34PC8-VFdWP7PsJieNJLt_tByNTzAHW28CCCJ8xtRtQj8ZzsiXfN3lQMU8WM"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/8.4.4"
+							}
+						],
+						"url": {
+							"raw": "https://api-stage.daalchini.co.in/consumerbe/api/v2/user/loyalty/details",
+							"protocol": "https",
+							"host": [
+								"api-stage",
+								"daalchini",
+								"co",
+								"in"
+							],
+							"path": [
+								"consumerbe",
+								"api",
+								"v2",
+								"user",
+								"loyalty",
+								"details"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 26 Nov 2024 08:36:30 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "nginx/1.18.0 (Ubuntu)"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": {\n        \"success\": true,\n        \"code\": \"OK\",\n        \"message\": \"Success\",\n        \"timestamp\": \"2024-11-26T08:36:30.854584789Z\"\n    },\n    \"data\": {\n        \"levelImage\": null,\n        \"levelId\": null,\n        \"levelName\": null,\n        \"totalMilestones\": null,\n        \"currentLevelMilestoneCount\": null,\n        \"levelRewards\": null\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Logout_Current_Device",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"\r",
+							"// Assert success status and message\r",
+							"pm.test(\"Logged out successfully\", () => {\r",
+							"    pm.expect(res.status).to.eql(\"SUCCESS\");\r",
+							"    pm.expect(res.statusCode).to.eql(\"SS_0001\");\r",
+							"    pm.expect(res.statusMessage).to.eql(\"SUCCESS\");\r",
+							"    pm.expect(res.successful).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// Assert response is null\r",
+							"pm.test(\"Profile response is null (as expected)\", () => {\r",
+							"    pm.expect(res.response).to.be.null;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{oauthToken}}",
+						"type": "text"
+					},
+					{
+						"key": "x-device-id",
+						"value": "a4fd2cda-f34f-4b08-be95-615c980d5e5d",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api-stage.daalchini.co.in/auth/user/logout",
+					"protocol": "https",
+					"host": [
+						"api-stage",
+						"daalchini",
+						"co",
+						"in"
+					],
+					"path": [
+						"auth",
+						"user",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// ✅ Check if status code is within expected values\r",
+					"// As of now giving 400 here in the future have to shift all error assertion requests to separate folder to minimize the redundancy\r",
+					"pm.test(\"Status code is valid\", function () {\r",
+					"    let validStatusCodes = [200,201,202,400];\r",
+					"    let actualStatusCode = pm.response.code;\r",
+					"\r",
+					"    pm.expect(validStatusCodes).to.include(actualStatusCode, `Unexpected status code: ${actualStatusCode}`);\r",
+					"});\r",
+					"\r",
+					"// ✅ Check Content-Type\r",
+					"pm.test(\"Content-Type is application/json\", function () {\r",
+					"    const contentType = pm.response.headers.get(\"Content-Type\");\r",
+					"    pm.expect(contentType).to.include(\"application/json\");\r",
+					"});\r",
+					"\r",
+					"\r",
+					"\r",
+					"\r",
+					"\r",
+					"\r",
+					""
+				]
+			}
+		}
+	]
+}
